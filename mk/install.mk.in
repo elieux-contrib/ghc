@@ -83,18 +83,18 @@ ifeq "$(RelocatableBuild)" "YES"
 
 # Hack: our directory layouts tend to be different on Windows, so
 # hack around configure's bogus assumptions here.
-datarootdir = $(prefix)
-datadir     = $(prefix)/lib
+datarootdir = $(prefix)/share
+datadir     = $(datarootdir)
 libdir      = $(prefix)/lib
 
-docdir    = $(prefix)/doc
+docdir    = $(datarootdir)/doc/ghc
 htmldir   = $(docdir)
 dvidir    = $(docdir)
 pdfdir    = $(docdir)
 psdir     = $(docdir)
 
-ghclibdir = $(libdir)
-ghcdocdir = $(datarootdir)/doc
+ghclibdir = $(libdir)/ghc
+ghcdocdir = $(datarootdir)/doc/ghc
 
 else
 

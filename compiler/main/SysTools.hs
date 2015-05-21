@@ -1407,7 +1407,7 @@ getBaseDir = try_size 2048 -- plenty, PATH_MAX is 512 under Win32.
                                          "ghc-stage3.exe"] ->
                     case splitFileName $ takeDirectory d of
                     -- ghc is in $topdir/bin/ghc.exe
-                    (d', bin) | lower bin == "bin" -> takeDirectory d' </> "lib"
+                    (d', bin) | lower bin == "bin" -> takeDirectory d' </> "lib" </> "ghc"
                     _ -> fail
                 _ -> fail
         where fail = panic ("can't decompose ghc.exe path: " ++ show s)

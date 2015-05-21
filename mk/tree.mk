@@ -16,8 +16,8 @@ GHC_DRIVER_DIR          = driver
 
 INPLACE                 = inplace
 INPLACE_BIN             = $(INPLACE)/bin
-INPLACE_LIB             = $(INPLACE)/lib
-INPLACE_TOPDIR          = $(INPLACE)/lib
+INPLACE_LIB             = $(INPLACE)/lib/ghc
+INPLACE_TOPDIR          = $(INPLACE)/lib/ghc
 
 ################################################################################
 #

@@ -1896,7 +1896,7 @@ unDosifyPath :: FilePath -> FilePath
 unDosifyPath xs = subst '\\' '/' xs
 
 getLibDir :: IO (Maybe String)
-getLibDir = fmap (fmap (</> "lib")) $ getExecDir "/bin/ghc-pkg.exe"
+getLibDir = fmap (fmap (</> "lib" </> "ghc")) $ getExecDir "/bin/ghc-pkg.exe"
 
 -- (getExecDir cmd) returns the directory in which the current
 --                  executable, which should be called 'cmd', is running

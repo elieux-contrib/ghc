@@ -192,7 +192,7 @@ include rules/clean-target.mk
 # -----------------------------------------------------------------------------
 # The inplace tree
 
-$(eval $(call clean-target,root,inplace,inplace/bin inplace/lib))
+$(eval $(call clean-target,root,inplace,inplace/bin inplace/lib/ghc))
 
 # -----------------------------------------------------------------------------
 # Whether to build dependencies or not
@@ -1243,7 +1243,7 @@ clean_files :
 # this is here since CLEAN_FILES can't handle folders
 	$(call removeTrees,includes/dist-derivedconstants)
 	$(call removeTrees,inplace/bin)
-	$(call removeTrees,inplace/lib)
+	$(call removeTrees,inplace/lib/ghc)
 	$(call removeTrees,libraries/bootstrapping.conf)
 
 .PHONY: clean_libraries
