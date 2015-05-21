@@ -581,21 +581,13 @@ SRC_HSC2HS_OPTS_STAGE0 += --cflag=-D$(HostArch_CPP)_HOST_ARCH=1 --cflag=-D$(Host
 SRC_HSC2HS_OPTS_STAGE1 += --cflag=-D$(TargetArch_CPP)_HOST_ARCH=1 --cflag=-D$(TargetOS_CPP)_HOST_OS=1
 SRC_HSC2HS_OPTS_STAGE2 += --cflag=-D$(TargetArch_CPP)_HOST_ARCH=1 --cflag=-D$(TargetOS_CPP)_HOST_OS=1
 
-ifeq "$(TARGETPLATFORM)" "i386-unknown-mingw32"
-WINDRES = $(INPLACE_MINGW)/bin/windres
-else ifeq "$(TARGETPLATFORM)" "x86_64-unknown-mingw32"
-WINDRES = $(INPLACE_MINGW)/bin/windres
-endif
+WINDRES = @WindresCmd@
 
 #-----------------------------------------------------------------------------
 # Mingwex Library
 #
 HaveLibMingwEx	= @HaveLibMingwEx@
-ifeq "$(TARGETPLATFORM)" "i386-unknown-mingw32"
-DLLTOOL			= inplace/mingw/bin/dlltool.exe
-else ifeq "$(TARGETPLATFORM)" "x86_64-unknown-mingw32"
-DLLTOOL			= inplace/mingw/bin/dlltool.exe
-endif
+DLLTOOL = @DlltoolCmd@
 
 #-----------------------------------------------------------------------------
 # Other standard (ha!) Unix utilities
@@ -690,11 +682,7 @@ ifeq "$(Windows_Host)" "YES"
 XARGS_OPTS = -s 20000
 endif
 
-ifeq "$(TARGETPLATFORM)" "x86_64-unknown-mingw32"
-STRIP_CMD      = $(TOP)/inplace/mingw/bin/strip.exe
-else
-STRIP_CMD      = strip
-endif
+STRIP_CMD      = @StripCmd@
 PATCH_CMD      = @PatchCmd@
 TAR_CMD        = @TarCmd@
 BZIP2_CMD      = bzip2
@@ -718,13 +706,8 @@ else
 $(error $$(TAR_COMP) set to unknown value "$(TAR_COMP)" (supported: "bzip2", "gzip", "xz"))
 endif
 
-ifeq "$(Windows_Host)" "YES"
-TOUCH_CMD      = $(utils/touchy_dist_INPLACE)
-TOUCH_DEP      = $(TOUCH_CMD)
-else
 TOUCH_CMD      = touch
 TOUCH_DEP      =
-endif
 
 HSCOLOUR_CMD   = @HSCOLOUR@
 

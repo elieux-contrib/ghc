@@ -274,87 +274,6 @@ AC_SUBST(WithHc)
 FP_INTREE_GHC_PWD
 FP_FIND_ROOT
 
-if test "$HostOS" = "mingw32"
-then
-    test -d inplace || mkdir inplace
-
-    if test "$HostArch" = "i386"
-    then
-        # NB. If you update the tarballs to a new version of gcc, don't
-        # forget to tweak the paths in driver/gcc/gcc.c.
-        if ! test -d inplace/mingw ||
-             test inplace/mingw -ot ghc-tarballs/mingw/binutils*.tar.lzma  ||
-             test inplace/mingw -ot ghc-tarballs/mingw/gcc-core*.tar.lzma  ||
-             test inplace/mingw -ot ghc-tarballs/mingw/gcc-c++*.tar.lzma   ||
-             test inplace/mingw -ot ghc-tarballs/mingw/libgcc*.tar.gz      ||
-             test inplace/mingw -ot ghc-tarballs/mingw/libgmp*.tar.gz      ||
-             test inplace/mingw -ot ghc-tarballs/mingw/libmpc*.tar.gz      ||
-             test inplace/mingw -ot ghc-tarballs/mingw/libmpfr*.tar.gz     ||
-             test inplace/mingw -ot ghc-tarballs/mingw/libstdc*.tar.lzma   ||
-             test inplace/mingw -ot ghc-tarballs/mingw/mingwrt*-dev.tar.gz ||
-             test inplace/mingw -ot ghc-tarballs/mingw/mingwrt*-dll.tar.gz ||
-             test inplace/mingw -ot ghc-tarballs/mingw/w32api*.tar.lzma
-        then
-            AC_MSG_NOTICE([Making in-tree mingw tree])
-            rm -rf inplace/mingw
-            mkdir inplace/mingw
-            (
-                cd inplace/mingw &&
-                tar --lzma -xf ../../ghc-tarballs/mingw/binutils*.tar.lzma  &&
-                tar --lzma -xf ../../ghc-tarballs/mingw/gcc-core*.tar.lzma  &&
-                tar --lzma -xf ../../ghc-tarballs/mingw/gcc-c++*.tar.lzma   &&
-                tar --lzma -xf ../../ghc-tarballs/mingw/libgcc*.tar.lzma    &&
-                tar --lzma -xf ../../ghc-tarballs/mingw/libgmp*.tar.lzma    &&
-                tar --lzma -xf ../../ghc-tarballs/mingw/libmpc*.tar.lzma    &&
-                tar --lzma -xf ../../ghc-tarballs/mingw/libmpfr*.tar.lzma   &&
-                tar --lzma -xf ../../ghc-tarballs/mingw/libstdc*.tar.lzma   &&
-                tar -z     -xf ../../ghc-tarballs/mingw/mingwrt*-dev.tar.gz &&
-                tar -z     -xf ../../ghc-tarballs/mingw/mingwrt*-dll.tar.gz &&
-                tar --lzma -xf ../../ghc-tarballs/mingw/w32api*.tar.lzma    &&
-                mv bin/gcc.exe bin/realgcc.exe
-            )
-            PATH=`pwd`/inplace/mingw/bin:$PATH inplace/mingw/bin/realgcc.exe driver/gcc/gcc.c driver/utils/cwrapper.c driver/utils/getLocation.c -Idriver/utils -o inplace/mingw/bin/gcc.exe
-            AC_MSG_NOTICE([In-tree mingw tree created])
-        fi
-    else
-        # NB. If you update the tarballs to a new version of gcc, don't
-        # forget to tweak the paths in driver/gcc/gcc.c.
-        if ! test -d inplace/mingw ||
-             test inplace/mingw -ot ghc-tarballs/mingw64/*.tar.bz2
-        then
-            AC_MSG_NOTICE([Making in-tree mingw tree])
-            rm -rf inplace/mingw
-            mkdir inplace/mingw
-            (
-                cd inplace/mingw &&
-                tar -jxf ../../ghc-tarballs/mingw64/*.tar.bz2
-            )
-            AC_MSG_NOTICE([In-tree mingw tree created])
-        fi
-    fi
-
-    mingwbin="$hardtop/inplace/mingw/bin/"
-    CC="${mingwbin}gcc.exe"
-    LD="${mingwbin}ld.exe"
-    NM="${mingwbin}nm.exe"
-    RANLIB="${mingwbin}ranlib.exe"
-    OBJDUMP="${mingwbin}objdump.exe"
-    fp_prog_ar="${mingwbin}ar.exe"
-
-    if ! test -d inplace/perl ||
-         test inplace/perl -ot ghc-tarballs/perl/ghc-perl*.tar.gz
-    then
-        AC_MSG_NOTICE([Making in-tree perl tree])
-        rm -rf inplace/perl
-        mkdir inplace/perl
-        (
-            cd inplace/perl &&
-            tar -zxf ../../ghc-tarballs/perl/ghc-perl*.tar.gz
-        )
-        AC_MSG_NOTICE([In-tree perl tree created])
-    fi
-fi
-
 # system libffi
 
 AC_ARG_WITH([system-libffi],
@@ -523,16 +442,25 @@ RanlibCmd="$RANLIB"
 RANLIB="$RanlibCmd"
 
 
-# Note: we may not have objdump on OS X, and we only need it on Windows (for DLL checks)
-case $HostOS_CPP in
-cygwin32|mingw32)
-    dnl ** Which objdump to use?
-    dnl --------------------------------------------------------------
     FP_ARG_WITH_PATH_GNU_PROG([OBJDUMP], [objdump], [objdump])
     ObjdumpCmd="$OBJDUMP"
     AC_SUBST([ObjdumpCmd])
-    ;;
-esac
+
+    FP_ARG_WITH_PATH_GNU_PROG([STRIP], [strip], [strip])
+    StripCmd="$STRIP"
+    AC_SUBST([StripCmd])
+
+    FP_ARG_WITH_PATH_GNU_PROG([DLLWRAP], [dllwrap], [dllwrap])
+    DllwrapCmd="$DLLWRAP"
+    AC_SUBST([DllwrapCmd])
+
+    FP_ARG_WITH_PATH_GNU_PROG([DLLTOOL], [dlltool], [dlltool])
+    DlltoolCmd="$DLLTOOL"
+    AC_SUBST([DlltoolCmd])
+
+    FP_ARG_WITH_PATH_GNU_PROG([WINDRES], [windres], [windres])
+    WindresCmd="$WINDRES"
+    AC_SUBST([WindresCmd])
 
 dnl ** Which LLVM llc to use?
 dnl --------------------------------------------------------------
@@ -623,11 +551,6 @@ dnl ** does #! work?
 AC_SYS_INTERPRETER()
 
 dnl ** look for `perl'
-case $HostOS_CPP in
-cygwin32|mingw32)
-    PerlCmd=$hardtop/inplace/perl/perl
-    ;;
-*)
     AC_PATH_PROG(PerlCmd,perl)
     if test -z "$PerlCmd"
     then
@@ -637,8 +560,6 @@ cygwin32|mingw32)
     else
         FPTOOLS_CHECK_PERL_VERSION
     fi
-    ;;
-esac
 
 dnl ** look for GCC and find out which version
 dnl     Figure out which C compiler to use.  Gcc is preferred.
