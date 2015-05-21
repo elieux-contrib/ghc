@@ -911,9 +911,9 @@ install_packages: rts/dist/package.conf.install
 	                                  $p $(INSTALL_DISTDIR_$p)    \
 	                                  "$(STRIP_CMD)"              \
 	                                  '$(DESTDIR)'                \
-	                                  '$(prefix)'                 \
-	                                  '$(ghclibdir)'              \
-	                                  '$(docdir)/html/libraries'  \
+	                                  '$(prefix:/%=%)'                 \
+	                                  '$(ghclibdir:/%=%)'              \
+	                                  '$(docdir:/%=%)/html/libraries'  \
 	                                  '$(GhcLibWays)'))
 	"$(INSTALLED_GHC_PKG_REAL)" --force --global-package-db "$(INSTALLED_PACKAGE_CONF)" update rts/dist/package.conf.install
 	$(foreach p, $(INSTALL_PACKAGES),                             \
@@ -924,9 +924,9 @@ install_packages: rts/dist/package.conf.install
 	                                  "$(INSTALLED_GHC_PKG_REAL)" \
 	                                  "$(DESTDIR)$(topdir)"       \
 	                                  '$(DESTDIR)'                \
-	                                  '$(prefix)'                 \
-	                                  '$(ghclibdir)'              \
-	                                  '$(docdir)/html/libraries'  \
+	                                  '$(prefix:/%=%)'                 \
+	                                  '$(ghclibdir:/%=%)'              \
+	                                  '$(docdir:/%=%)/html/libraries'  \
 	                                  $(RelocatableBuild)))
 # when we install the packages above, ghc-pkg obeys umask when creating
 # the package.conf files, but for everything else we specify the
