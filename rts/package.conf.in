@@ -49,9 +49,7 @@ extra-libraries:
                               ,"bfd", "iberty"  /* for debugging */
 #endif
 #ifdef HAVE_LIBMINGWEX
-# ifndef INSTALLING                             /* Bundled Mingw is behind */
                               ,"mingwex"
-# endif
 #endif
 #if USE_PAPI
                              , "papi"
