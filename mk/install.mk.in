@@ -165,6 +165,9 @@ INSTALL_DIR     = $(INSTALL) -m 755 -d $(call MK_INSTALL_DEST,$1)
 ifeq "$(OSTYPE)" "cygwin"
 MK_INSTALL_DEST = $$(cygpath $1)
 else
+ifeq "$(OSTYPE)" "msys"
+MK_INSTALL_DEST = $$(cygpath $1)
+endif
 MK_INSTALL_DEST = $1
 endif
 
