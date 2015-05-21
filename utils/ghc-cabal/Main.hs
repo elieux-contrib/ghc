@@ -246,7 +246,7 @@ updateInstallDirTemplates relocatableBuild myPrefix myLibdir myDocdir idts
     = idts {
           prefix    = toPathTemplate $
                           if relocatableBuild
-                          then "$topdir"
+                          then "$topdir/../.."
                           else myPrefix,
           libdir    = toPathTemplate $
                           if relocatableBuild
@@ -255,7 +255,7 @@ updateInstallDirTemplates relocatableBuild myPrefix myLibdir myDocdir idts
           libsubdir = toPathTemplate "$libname",
           docdir    = toPathTemplate $
                           if relocatableBuild
-                          then "$topdir/../doc/html/libraries/$pkgid"
+                          then "$topdir/../../share/doc/ghc/html/libraries/$pkgid"
                           else (myDocdir </> "$pkgid"),
           htmldir   = toPathTemplate "$docdir"
       }

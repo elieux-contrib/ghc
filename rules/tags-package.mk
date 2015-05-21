@@ -25,11 +25,11 @@ $(call profStart, tags-package($1,$2))
 
 .PHONY: tags_$1
 tags_$1:
-	inplace/bin/ghctags --topdir $$(TOP)/inplace/lib -c --use-cabal-config $1/$2 -- $$($1_$2_TAGS_HC_OPTS) $$($1_$2_v_ALL_HC_OPTS) -- $$($1_$2_HS_SRCS)
+	inplace/bin/ghctags --topdir $$(TOP)/inplace/lib/ghc -c --use-cabal-config $1/$2 -- $$($1_$2_TAGS_HC_OPTS) $$($1_$2_v_ALL_HC_OPTS) -- $$($1_$2_HS_SRCS)
 
 .PHONY: TAGS_$1
 TAGS_$1:
-	inplace/bin/ghctags --topdir $$(TOP)/inplace/lib -e --use-cabal-config $1/$2 -- $$($1_$2_TAGS_HC_OPTS) $$($1_$2_v_ALL_HC_OPTS) -- $$($1_$2_HS_SRCS)
+	inplace/bin/ghctags --topdir $$(TOP)/inplace/lib/ghc -e --use-cabal-config $1/$2 -- $$($1_$2_TAGS_HC_OPTS) $$($1_$2_v_ALL_HC_OPTS) -- $$($1_$2_HS_SRCS)
 
 $(call profEnd, tags-package($1,$2))
 endef
