@@ -456,30 +456,16 @@ AC_DEFUN([GET_ARM_ISA],
 # Set the variables used in the settings file
 AC_DEFUN([FP_SETTINGS],
 [
-    if test "$windows" = YES
-    then
-        mingw_bin_prefix=mingw/bin/
-        SettingsCCompilerCommand="\$topdir/../${mingw_bin_prefix}gcc.exe"
-        SettingsHaskellCPPCommand="\$topdir/../${mingw_bin_prefix}gcc.exe"
-        SettingsHaskellCPPFlags="$HaskellCPPArgs"
-        SettingsLdCommand="\$topdir/../${mingw_bin_prefix}ld.exe"
-        SettingsArCommand="\$topdir/../${mingw_bin_prefix}ar.exe"
-        SettingsPerlCommand='$topdir/../perl/perl.exe'
-        SettingsDllWrapCommand="\$topdir/../${mingw_bin_prefix}dllwrap.exe"
-        SettingsWindresCommand="\$topdir/../${mingw_bin_prefix}windres.exe"
-        SettingsTouchCommand='$topdir/touchy.exe'
-    else
         SettingsCCompilerCommand="$WhatGccIsCalled"
         SettingsHaskellCPPCommand="$HaskellCPPCmd"
         SettingsHaskellCPPFlags="$HaskellCPPArgs"
         SettingsLdCommand="$LdCmd"
         SettingsArCommand="$ArCmd"
         SettingsPerlCommand="$PerlCmd"
-        SettingsDllWrapCommand="/bin/false"
-        SettingsWindresCommand="/bin/false"
+        SettingsDllWrapCommand="$DllwrapCmd"
+        SettingsWindresCommand="$WindresCmd"
         SettingsLibtoolCommand="libtool"
         SettingsTouchCommand='touch'
-    fi
     if test -z "$LlcCmd"
     then
       SettingsLlcCommand="llc"
@@ -680,20 +666,13 @@ AC_ARG_WITH($2,
 [AC_HELP_STRING([--with-$2=ARG],
         [Use ARG as the path to $2 [default=autodetect]])],
 [
-    if test "$HostOS" = "mingw32"
-    then
-        AC_MSG_WARN([Request to use $withval will be ignored])
-    else
         $1=$withval
-    fi
 
     # Remember that we set this manually.  Used to override CC_STAGE0
     # and friends later, if we are not cross-compiling.
     With_$2=$withval
 ],
 [
-    if test "$HostOS" != "mingw32"
-    then
         if test "$4" = "no" -o "$target_alias" = "" ; then
             AC_PATH_PROG([$1], [$3])
         else
@@ -703,7 +682,6 @@ AC_ARG_WITH($2,
         then
             AC_MSG_ERROR([cannot find $3 in your PATH])
         fi
-    fi
 ]
 )
 ]) # FP_ARG_WITH_PATH_GNU_PROG_GENERAL
@@ -2079,12 +2057,7 @@ AC_ARG_WITH(hs-cpp,
 [AC_HELP_STRING([--with-hs-cpp=ARG],
       [Path to the (C) preprocessor for Haskell files [default=autodetect]])],
 [
-    if test "$HostOS" = "mingw32"
-    then
-        AC_MSG_WARN([Request to use $withval will be ignored])
-    else
         HS_CPP_CMD=$withval
-    fi
 ],
 [
 
@@ -2133,12 +2106,7 @@ AC_ARG_WITH(hs-cpp-flags,
   [AC_HELP_STRING([--with-hs-cpp-flags=ARG],
       [Flags to the (C) preprocessor for Haskell files [default=autodetect]])],
   [
-      if test "$HostOS" = "mingw32"
-      then
-          AC_MSG_WARN([Request to use $withval will be ignored])
-      else
           HS_CPP_ARGS=$withval
-      fi
   ],
 [
   $HS_CPP_CMD -x c /dev/null -dM -E > conftest.txt 2>&1
